@@ -48,6 +48,11 @@ DATASETS = {
         loader=partial(_load_c4_dataset, split="validation"),
         sample_processor=_process_c4_text,
     ),
+    "hf_text": DatasetConfig(
+        path="",
+        loader=lambda path: load_dataset(path, split="train", streaming=True),
+        sample_processor=_process_c4_text,
+    ),
 }
 
 

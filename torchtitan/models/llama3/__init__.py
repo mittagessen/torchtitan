@@ -185,6 +185,25 @@ llama3_configs = {
             scaling="llama",
         ),
     ),
+    "bytellama_40m": Llama3Model.Config(
+        dim=576,
+        n_layers=12,
+        vocab_size=387,
+        layer=Llama3TransformerBlock.Config(
+            feed_forward=FeedForward.Config(hidden_dim=1536),
+            attention=GQAttention.Config(
+                n_heads=9, n_kv_heads=3, attn_backend="sdpa", rope_backend="complex"
+            ),
+        ),
+        rope=RoPE.Config(
+            dim=576 // 9,
+            max_seq_len=131072,
+            theta=10000.0,
+            backend="complex",
+            scaling="llama",
+            scaling_factor=32.0,
+        ),
+    ),
     "405B": Llama3Model.Config(
         dim=16384,
         n_layers=126,

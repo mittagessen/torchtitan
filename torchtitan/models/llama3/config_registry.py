@@ -7,6 +7,7 @@
 from torchtitan.components.checkpoint import CheckpointManager
 from torchtitan.components.lr_scheduler import LRSchedulersContainer
 from torchtitan.components.metrics import MetricsProcessor
+from torchtitan.components.octet_tokenizer import OctetTokenizer
 from torchtitan.components.optimizer import (
     OptimizersContainer,
     OptimizersInBackwardContainer,
@@ -213,4 +214,26 @@ def llama3_405b() -> Trainer.Config:
             freq=500,
             steps=1200,
         ),
+    )
+
+
+def bytellama_40m() -> Trainer.Config:
+    return Trainer.Config(
+        tokenizer=OctetTokenizer.Config(),
+        model_spec=model_registry("bytellama_40m"),
+        optimizer=OptimizersContainer.Config(lr=4e-4),
+        lr_scheduler=LRSchedulersContainer.Config(
+            warmup_steps=2000,
+            decay_type="cosine",
+        ),
+        training=TrainingConfig(
+            local_batch_size=38,
+            seq_len=2048,
+            mixed_precision_param="bfloat16",
+            dtype="bfloat16",
+        ),
+        dataloader=HuggingFaceTextDataLoader.Config(
+            dataset="hf_text",
+        ),
+        compile=CompileConfig(enable=True),
     )
