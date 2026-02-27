@@ -4,7 +4,6 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-import os
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
@@ -56,16 +55,12 @@ DATASETS = {
     ),
     "hf_text_train99": DatasetConfig(
         path="",
-        loader=lambda path: load_dataset(
-            path, split="train[:99%]", num_proc=os.cpu_count()
-        ),
+        loader=lambda path: load_dataset(path, split="train[:99%]"),
         sample_processor=_process_c4_text,
     ),
     "hf_text_val99": DatasetConfig(
         path="",
-        loader=lambda path: load_dataset(
-            path, split="train[99%:]", num_proc=os.cpu_count()
-        ),
+        loader=lambda path: load_dataset(path, split="train[99%:]"),
         sample_processor=_process_c4_text,
     ),
 }
