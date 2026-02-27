@@ -31,6 +31,13 @@ def _process_c4_text(sample: dict[str, Any]) -> str:
     return sample["text"]
 
 
+def _load_hf_text_split(path: str, start_pct: int, end_pct: int):
+    """Load a percentage slice of a local HF dataset without cache copies."""
+    ds = load_dataset(path, split="train")
+    n = len(ds)
+    return ds.select(range(n * start_pct // 100, n * end_pct // 100))
+
+
 # Add your dataset here - more information at docs/datasets.md
 DATASETS = {
     "c4": DatasetConfig(
@@ -55,12 +62,12 @@ DATASETS = {
     ),
     "hf_text_train99": DatasetConfig(
         path="",
-        loader=lambda path: load_dataset(path, split="train[:99%]"),
+        loader=lambda path: _load_hf_text_split(path, 0, 99),
         sample_processor=_process_c4_text,
     ),
     "hf_text_val99": DatasetConfig(
         path="",
-        loader=lambda path: load_dataset(path, split="train[99%:]"),
+        loader=lambda path: _load_hf_text_split(path, 99, 100),
         sample_processor=_process_c4_text,
     ),
 }
