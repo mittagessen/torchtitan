@@ -53,6 +53,16 @@ DATASETS = {
         loader=lambda path: load_dataset(path, split="train", streaming=True),
         sample_processor=_process_c4_text,
     ),
+    "hf_text_train99": DatasetConfig(
+        path="",
+        loader=lambda path: load_dataset(path, split="train[:99%]"),
+        sample_processor=_process_c4_text,
+    ),
+    "hf_text_val99": DatasetConfig(
+        path="",
+        loader=lambda path: load_dataset(path, split="train[99%:]"),
+        sample_processor=_process_c4_text,
+    ),
 }
 
 
